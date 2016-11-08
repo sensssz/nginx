@@ -41,7 +41,8 @@ CORE_DEPS="src/core/nginx.h \
            src/core/ngx_open_file_cache.h \
            src/core/ngx_crypt.h \
            src/core/ngx_proxy_protocol.h \
-           src/core/ngx_syslog.h"
+           src/core/ngx_syslog.h \
+           src/os/unix/trace_tool.c"
 
 
 CORE_SRCS="src/core/nginx.c \
@@ -78,7 +79,8 @@ CORE_SRCS="src/core/nginx.c \
            src/core/ngx_open_file_cache.c \
            src/core/ngx_crypt.c \
            src/core/ngx_proxy_protocol.c \
-           src/core/ngx_syslog.c"
+           src/core/ngx_syslog.c \
+           src/os/unix/trace_tool.c"
 
 
 EVENT_MODULES="ngx_events_module ngx_event_core_module"
@@ -143,8 +145,7 @@ UNIX_DEPS="$CORE_DEPS $EVENT_DEPS \
             src/os/unix/ngx_os.h \
             src/os/unix/ngx_user.h \
             src/os/unix/ngx_dlopen.h \
-            src/os/unix/ngx_process_cycle.h \
-            src/os/unix/trace_tool.h"
+            src/os/unix/ngx_process_cycle.h"
 
 # add to UNIX_DEPS
 #            src/os/unix/ngx_gcc_atomic_amd64.h \
@@ -178,8 +179,7 @@ UNIX_SRCS="$CORE_SRCS $EVENT_SRCS \
             src/os/unix/ngx_posix_init.c \
             src/os/unix/ngx_user.c \
             src/os/unix/ngx_dlopen.c \
-            src/os/unix/ngx_process_cycle.c \
-            src/os/unix/trace_tool.c"
+            src/os/unix/ngx_process_cycle.c"
 
 POSIX_DEPS=src/os/unix/ngx_posix_config.h
 

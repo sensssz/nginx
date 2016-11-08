@@ -11,7 +11,7 @@
 
 #include <ngx_config.h>
 #include <ngx_core.h>
-
+#include <trace_tool.h>
 
 typedef struct ngx_http_request_s     ngx_http_request_t;
 typedef struct ngx_http_upstream_s    ngx_http_upstream_t;
