@@ -143,7 +143,8 @@ UNIX_DEPS="$CORE_DEPS $EVENT_DEPS \
             src/os/unix/ngx_os.h \
             src/os/unix/ngx_user.h \
             src/os/unix/ngx_dlopen.h \
-            src/os/unix/ngx_process_cycle.h"
+            src/os/unix/ngx_process_cycle.h \
+            src/os/unix/trace_tool.h"
 
 # add to UNIX_DEPS
 #            src/os/unix/ngx_gcc_atomic_amd64.h \
@@ -177,7 +178,8 @@ UNIX_SRCS="$CORE_SRCS $EVENT_SRCS \
             src/os/unix/ngx_posix_init.c \
             src/os/unix/ngx_user.c \
             src/os/unix/ngx_dlopen.c \
-            src/os/unix/ngx_process_cycle.c"
+            src/os/unix/ngx_process_cycle.c \
+            src/os/unix/trace_tool.c"
 
 POSIX_DEPS=src/os/unix/ngx_posix_config.h
 
