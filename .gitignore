@@ -1,3 +1,5 @@
+Makefile
+objgs/
 **/*.o
 **/*.so
 **/.DS_Store
