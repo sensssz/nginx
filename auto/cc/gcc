@@ -173,7 +173,8 @@ CFLAGS="$CFLAGS -g"
 
 # DragonFly's gcc3 generates DWARF
 #CFLAGS="$CFLAGS -g -gstabs"
+CXX_FLAGS="$CFLAGS -std=c++11"
 
 if [ ".$CPP" = "." ]; then
-    CPP="$CC -E"
+    CPP="g++"
 fi

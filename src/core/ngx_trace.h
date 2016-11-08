@@ -1,5 +1,5 @@
-#ifndef MY_TRACE_TOOL_H
-#define MY_TRACE_TOOL_H
+#ifndef NGX_TRACCE_H
+#define NGX_TRACCE_H
 
 #include <pthread.h>
 #include <time.h>

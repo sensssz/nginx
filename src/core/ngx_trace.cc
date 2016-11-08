@@ -1,4 +1,4 @@
-#include "trace_tool.h"
+#include <ngx_trace.h>
 #include <pthread.h>
 #include <unistd.h>
 #include <algorithm>
@@ -344,7 +344,7 @@ void TraceTool::add_record(int function_index, long duration) {
 
 void TraceTool::write_latency(string dir) {
     ofstream tpcc_log;
-    tpcc_log.open(dir + "tpcc";
+    tpcc_log.open(dir + "tpcc");
 
     for (ulint index = 0; index < transaction_start_times.size(); ++index) {
         ulint start_time = transaction_start_times[index];
