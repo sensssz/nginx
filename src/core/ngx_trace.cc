@@ -244,7 +244,6 @@ TraceTool::TraceTool() : function_times() {
 }
 
 bool TraceTool::should_monitor() {
-    log_file << "path count is " << path_count << endl;
     return path_count == TARGET_PATH_COUNT;
 }
 
