@@ -825,7 +825,9 @@ ngx_http_handler(ngx_http_request_t *r)
 #endif
 
     r->write_event_handler = ngx_http_core_run_phases;
+    PATH_INC();
     ngx_http_core_run_phases(r);
+    PATH_DEC();
 }
 
 
