@@ -203,12 +203,14 @@ int TRACE_START() {
     if (TraceTool::should_monitor()) {
         clock_gettime(CLOCK_REALTIME, &call_start);
     }
+    PATH_INC();
 #endif
     return 0;
 }
 
 int TRACE_END(int index) {
 #ifdef MONITOR
+    PATH_DEC();
     if (TraceTool::should_monitor()) {
         clock_gettime(CLOCK_REALTIME, &call_end);
         long duration = TraceTool::difftime(call_start, call_end);
