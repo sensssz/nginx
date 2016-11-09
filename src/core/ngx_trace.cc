@@ -229,7 +229,8 @@ TraceTool *TraceTool::get_instance() {
 
 TraceTool::TraceTool() : function_times() {
     /* Open the log file in append mode so that it won't be overwritten */
-    const int number_of_functions = NUMBER_OF_FUNCTIONS + 1;
+    log_file.open("/home/jiamin/nginx/vprofiler/logs/log_file", std::ofstream::out | std::ofstream::app);
+    const int number_of_functions = NUMBER_OF_FUNCTIONS + 2;
     vector<int> function_time;
     function_time.push_back(0);
     for (int index = 0; index < number_of_functions; index++) {
@@ -372,5 +373,5 @@ void TraceTool::write_latency(string dir) {
 
 void TraceTool::write_log() {
 //    log_file << "Write log on instance " << instance << ", id is " << id << endl;
-    write_latency("latency/");
+    write_latency("/home/jiamin/nginx/vprofiler/latency/");
 }
