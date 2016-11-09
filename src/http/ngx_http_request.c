@@ -8,6 +8,7 @@
 #include <ngx_config.h>
 #include <ngx_core.h>
 #include <ngx_http.h>
+#include <ngx_trace.h>
 
 
 static void ngx_http_wait_request_handler(ngx_event_t *ev);
@@ -377,6 +378,7 @@ ngx_http_init_connection(ngx_connection_t *c)
 static void
 ngx_http_wait_request_handler(ngx_event_t *rev)
 {
+    SESSION_START();
     u_char                    *p;
     size_t                     size;
     ssize_t                    n;
@@ -397,6 +399,7 @@ ngx_http_wait_request_handler(ngx_event_t *rev)
 
     if (c->close) {
         ngx_http_close_connection(c);
+        SESSION_END(0);
         return;
     }
 
@@ -411,6 +414,7 @@ ngx_http_wait_request_handler(ngx_event_t *rev)
         b = ngx_create_temp_buf(c->pool, size);
         if (b == NULL) {
             ngx_http_close_connection(c);
+            SESSION_END(0);
             return;
         }
 
@@ -421,6 +425,7 @@ ngx_http_wait_request_handler(ngx_event_t *rev)
         b->start = ngx_palloc(c->pool, size);
         if (b->start == NULL) {
             ngx_http_close_connection(c);
+            SESSION_END(0);
             return;
         }
 
@@ -440,6 +445,7 @@ ngx_http_wait_request_handler(ngx_event_t *rev)
 
         if (ngx_handle_read_event(rev, 0) != NGX_OK) {
             ngx_http_close_connection(c);
+            SESSION_END(0);
             return;
         }
 
@@ -451,11 +457,13 @@ ngx_http_wait_request_handler(ngx_event_t *rev)
             b->start = NULL;
         }
 
+        SESSION_END(1);
         return;
     }
 
     if (n == NGX_ERROR) {
         ngx_http_close_connection(c);
+        SESSION_END(0);
         return;
     }
 
@@ -463,6 +471,7 @@ ngx_http_wait_request_handler(ngx_event_t *rev)
         ngx_log_error(NGX_LOG_INFO, c->log, 0,
                       "client closed connection");
         ngx_http_close_connection(c);
+        SESSION_END(0);
         return;
     }
 
@@ -475,6 +484,7 @@ ngx_http_wait_request_handler(ngx_event_t *rev)
 
         if (p == NULL) {
             ngx_http_close_connection(c);
+            SESSION_END(0);
             return;
         }
 
@@ -496,11 +506,15 @@ ngx_http_wait_request_handler(ngx_event_t *rev)
     c->data = ngx_http_create_request(c);
     if (c->data == NULL) {
         ngx_http_close_connection(c);
+        SESSION_END(0);
         return;
     }
 
     rev->handler = ngx_http_process_request_line;
+    PATH_INC();
     ngx_http_process_request_line(rev);
+    PATH_DEC();
+    SESSION_END(0);
 }
 
 
