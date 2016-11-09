@@ -514,7 +514,7 @@ ngx_http_wait_request_handler(ngx_event_t *rev)
     PATH_INC();
     ngx_http_process_request_line(rev);
     PATH_DEC();
-    SESSION_END(0);
+    SESSION_END(1);
 }
 
 
