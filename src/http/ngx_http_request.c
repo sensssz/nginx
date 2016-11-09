@@ -458,7 +458,7 @@ ngx_http_wait_request_handler(ngx_event_t *rev)
             b->start = NULL;
         }
 
-        SESSION_END(1);
+        SESSION_END(0);
         return;
     }
 
