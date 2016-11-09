@@ -1,5 +1,5 @@
 Makefile
-objgs/
+objs/
 **/*.o
 **/*.so
 **/.DS_Store
