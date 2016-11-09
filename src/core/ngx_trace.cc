@@ -39,18 +39,18 @@ private:
     TraceTool(TraceTool const &) { };
 public:
     static timespec global_last_query;
-    static __thread timespec trans_start;
-    static __thread ulint current_transaction_id;
+    static thread_local timespec trans_start;
+    static thread_local ulint current_transaction_id;
     /*!< Each thread can execute only one transaction at
          a time. This is the ID of the current transactions. */
 
-    static __thread int path_count;
+    static thread_local int path_count;
     /*!< Number of node in the function call path. Used for
          tracing running time of functions. */
 
-    static __thread bool is_commit;
+    static thread_local bool is_commit;
     /*!< True if the current transactions commits. */
-    static __thread bool commit_successful; /*!< True if the current transaction successfully commits. */
+    static thread_local bool commit_successful; /*!< True if the current transaction successfully commits. */
     static bool should_shutdown;
     static pthread_t back_thread;
     static ofstream log_file;
@@ -103,26 +103,26 @@ public:
 };
 
 TraceTool *TraceTool::instance = NULL;
-__thread ulint TraceTool::current_transaction_id = 0;
+thread_local ulint TraceTool::current_transaction_id = 0;
 
 timespec TraceTool::global_last_query;
 
 ofstream TraceTool::log_file;
 
-__thread int TraceTool::path_count = 0;
-__thread bool TraceTool::is_commit = false;
-__thread bool TraceTool::commit_successful = true;
-__thread timespec TraceTool::trans_start;
+thread_local int TraceTool::path_count = 0;
+thread_local bool TraceTool::is_commit = false;
+thread_local bool TraceTool::commit_successful = true;
+thread_local timespec TraceTool::trans_start;
 
 bool TraceTool::should_shutdown = false;
 pthread_t TraceTool::back_thread;
 
 /* Define MONITOR if needs to trace running time of functions. */
 #ifdef MONITOR
-static __thread timespec function_start;
-static __thread timespec function_end;
-static __thread timespec call_start;
-static __thread timespec call_end;
+static thread_local timespec function_start;
+static thread_local timespec function_end;
+static thread_local timespec call_start;
+static thread_local timespec call_end;
 #endif
 
 void log_command(const char *command) {
@@ -244,6 +244,9 @@ TraceTool::TraceTool() : function_times() {
 }
 
 bool TraceTool::should_monitor() {
+    if (path_count != TARGET_PATH_COUNT) {
+        log_file << "path count is " << path_count << endl;
+    }
     return path_count == TARGET_PATH_COUNT;
 }
 
