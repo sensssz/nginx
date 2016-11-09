@@ -226,6 +226,7 @@ timespec get_trx_start() {
 Get the current TraceTool instance. */
 TraceTool *TraceTool::get_instance() {
     if (instance == NULL) {
+        pthread_mutex_lock(&instance_mutex);
         /* Check instance again after entering the ciritical section
         to prevent double initilization. */
         if (instance == NULL) {
@@ -282,10 +283,6 @@ void *TraceTool::check_write_log(void *arg) {
                reclaim memory. */
             old_instance->write_log();
             delete old_instance;
-        }
-
-        if (now.tv_sec - global_last_query.tv_sec >= 5 && should_shutdown) {
-            break;
         }
     }
     return NULL;
