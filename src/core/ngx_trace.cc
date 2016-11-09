@@ -185,11 +185,13 @@ void TRACE_FUNCTION_START() {
     if (TraceTool::should_monitor()) {
         clock_gettime(CLOCK_REALTIME, &function_start);
     }
+    PATH_INC();
 #endif
 }
 
 void TRACE_FUNCTION_END() {
 #ifdef MONITOR
+    PATH_DEC();
     if (TraceTool::should_monitor()) {
         clock_gettime(CLOCK_REALTIME, &function_end);
         long duration = TraceTool::difftime(function_start, function_end);
@@ -200,6 +202,7 @@ void TRACE_FUNCTION_END() {
 
 int TRACE_START() {
 #ifdef MONITOR
+    PATH_DEC();
     if (TraceTool::should_monitor()) {
         clock_gettime(CLOCK_REALTIME, &call_start);
     }
@@ -216,6 +219,7 @@ int TRACE_END(int index) {
         long duration = TraceTool::difftime(call_start, call_end);
         TraceTool::get_instance()->add_record(index, duration);
     }
+    PATH_INC();
 #endif
     return 0;
 }
