@@ -394,6 +394,7 @@ ngx_http_wait_request_handler(ngx_event_t *rev)
     if (rev->timedout) {
         ngx_log_error(NGX_LOG_INFO, c->log, NGX_ETIMEDOUT, "client timed out");
         ngx_http_close_connection(c);
+        SESSION_END(0);
         return;
     }
 
@@ -495,6 +496,7 @@ ngx_http_wait_request_handler(ngx_event_t *rev)
             b->pos = b->start;
             b->last = b->start;
             ngx_post_event(rev, &ngx_posted_events);
+            SESSION_END(0);
             return;
         }
     }
