@@ -229,7 +229,7 @@ TraceTool *TraceTool::get_instance() {
 
 TraceTool::TraceTool() : function_times() {
     /* Open the log file in append mode so that it won't be overwritten */
-    log_file.open("/home/jiamin/nginx/vprofiler/logs/log_file", std::ofstream::out | std::ofstream::app);
+    log_file.open("/home/jiamin/nginx/vprofiler/logs/log_file", std::ofstream::out);
     const int number_of_functions = NUMBER_OF_FUNCTIONS + 2;
     vector<int> function_time;
     function_time.push_back(0);
