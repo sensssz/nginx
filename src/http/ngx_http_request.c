@@ -955,7 +955,6 @@ ngx_http_process_request_line(ngx_event_t *rev)
 
             /* the request line has been parsed successfully */
 
-            SESSION_START();
             r->request_line.len = r->request_end - r->request_start;
             r->request_line.data = r->request_start;
             r->request_length = r->header_in->pos - r->request_start;
@@ -971,7 +970,6 @@ ngx_http_process_request_line(ngx_event_t *rev)
             }
 
             if (ngx_http_process_request_uri(r) != NGX_OK) {
-                SESSION_END(0);
                 return;
             }
 
@@ -986,18 +984,15 @@ ngx_http_process_request_line(ngx_event_t *rev)
                     ngx_log_error(NGX_LOG_INFO, c->log, 0,
                                   "client sent invalid host in request line");
                     ngx_http_finalize_request(r, NGX_HTTP_BAD_REQUEST);
-                    SESSION_END(0);
                     return;
                 }
 
                 if (rc == NGX_ERROR) {
                     ngx_http_close_request(r, NGX_HTTP_INTERNAL_SERVER_ERROR);
-                    SESSION_END(0);
                     return;
                 }
 
                 if (ngx_http_set_virtual_server(r, &host) == NGX_ERROR) {
-                    SESSION_END(0);
                     return;
                 }
 
@@ -1010,14 +1005,10 @@ ngx_http_process_request_line(ngx_event_t *rev)
                     && ngx_http_set_virtual_server(r, &r->headers_in.server)
                        == NGX_ERROR)
                 {
-                    SESSION_END(0);
                     return;
                 }
 
-                PATH_INC();
                 ngx_http_process_request(r);
-                PATH_DEC();
-                SESSION_END(1);
                 return;
             }
 
@@ -1027,7 +1018,6 @@ ngx_http_process_request_line(ngx_event_t *rev)
                 != NGX_OK)
             {
                 ngx_http_close_request(r, NGX_HTTP_INTERNAL_SERVER_ERROR);
-                SESSION_END(0);
                 return;
             }
 
@@ -1036,7 +1026,6 @@ ngx_http_process_request_line(ngx_event_t *rev)
             rev->handler = ngx_http_process_request_headers;
             ngx_http_process_request_headers(rev);
 
-            SESSION_END(0);
             return;
         }
 
@@ -1850,6 +1839,7 @@ ngx_http_process_request_header(ngx_http_request_t *r)
 void
 ngx_http_process_request(ngx_http_request_t *r)
 {
+    SESSION_START();
     ngx_connection_t  *c;
 
     c = r->connection;
@@ -1865,6 +1855,7 @@ ngx_http_process_request(ngx_http_request_t *r)
             ngx_log_error(NGX_LOG_INFO, c->log, 0,
                           "client sent plain HTTP request to HTTPS port");
             ngx_http_finalize_request(r, NGX_HTTP_TO_HTTPS);
+            SESSION_END(0);
             return;
         }
 
@@ -1884,6 +1875,7 @@ ngx_http_process_request(ngx_http_request_t *r)
                                        (SSL_get0_session(c->ssl->connection)));
 
                 ngx_http_finalize_request(r, NGX_HTTPS_CERT_ERROR);
+                SESSION_END(0);
                 return;
             }
 
@@ -1898,6 +1890,7 @@ ngx_http_process_request(ngx_http_request_t *r)
                                        (SSL_get0_session(c->ssl->connection)));
 
                     ngx_http_finalize_request(r, NGX_HTTPS_NO_CERT);
+                    SESSION_END(0);
                     return;
                 }
 
@@ -1926,6 +1919,7 @@ ngx_http_process_request(ngx_http_request_t *r)
     ngx_http_handler(r);
 
     ngx_http_run_posted_requests(c);
+    SESSION_END(1);
 }
 
 
