@@ -378,7 +378,6 @@ ngx_http_init_connection(ngx_connection_t *c)
 static void
 ngx_http_wait_request_handler(ngx_event_t *rev)
 {
-    SESSION_START();
     u_char                    *p;
     size_t                     size;
     ssize_t                    n;
@@ -394,13 +393,11 @@ ngx_http_wait_request_handler(ngx_event_t *rev)
     if (rev->timedout) {
         ngx_log_error(NGX_LOG_INFO, c->log, NGX_ETIMEDOUT, "client timed out");
         ngx_http_close_connection(c);
-        SESSION_END(0);
         return;
     }
 
     if (c->close) {
         ngx_http_close_connection(c);
-        SESSION_END(0);
         return;
     }
 
@@ -415,7 +412,6 @@ ngx_http_wait_request_handler(ngx_event_t *rev)
         b = ngx_create_temp_buf(c->pool, size);
         if (b == NULL) {
             ngx_http_close_connection(c);
-            SESSION_END(0);
             return;
         }
 
@@ -426,7 +422,6 @@ ngx_http_wait_request_handler(ngx_event_t *rev)
         b->start = ngx_palloc(c->pool, size);
         if (b->start == NULL) {
             ngx_http_close_connection(c);
-            SESSION_END(0);
             return;
         }
 
@@ -446,7 +441,6 @@ ngx_http_wait_request_handler(ngx_event_t *rev)
 
         if (ngx_handle_read_event(rev, 0) != NGX_OK) {
             ngx_http_close_connection(c);
-            SESSION_END(0);
             return;
         }
 
@@ -458,13 +452,11 @@ ngx_http_wait_request_handler(ngx_event_t *rev)
             b->start = NULL;
         }
 
-        SESSION_END(0);
         return;
     }
 
     if (n == NGX_ERROR) {
         ngx_http_close_connection(c);
-        SESSION_END(0);
         return;
     }
 
@@ -472,7 +464,6 @@ ngx_http_wait_request_handler(ngx_event_t *rev)
         ngx_log_error(NGX_LOG_INFO, c->log, 0,
                       "client closed connection");
         ngx_http_close_connection(c);
-        SESSION_END(0);
         return;
     }
 
@@ -485,7 +476,6 @@ ngx_http_wait_request_handler(ngx_event_t *rev)
 
         if (p == NULL) {
             ngx_http_close_connection(c);
-            SESSION_END(0);
             return;
         }
 
@@ -496,7 +486,6 @@ ngx_http_wait_request_handler(ngx_event_t *rev)
             b->pos = b->start;
             b->last = b->start;
             ngx_post_event(rev, &ngx_posted_events);
-            SESSION_END(0);
             return;
         }
     }
@@ -508,15 +497,11 @@ ngx_http_wait_request_handler(ngx_event_t *rev)
     c->data = ngx_http_create_request(c);
     if (c->data == NULL) {
         ngx_http_close_connection(c);
-        SESSION_END(0);
         return;
     }
 
     rev->handler = ngx_http_process_request_line;
-    PATH_INC();
     ngx_http_process_request_line(rev);
-    PATH_DEC();
-    SESSION_END(1);
 }
 
 
@@ -970,6 +955,7 @@ ngx_http_process_request_line(ngx_event_t *rev)
 
             /* the request line has been parsed successfully */
 
+            SESSION_START();
             r->request_line.len = r->request_end - r->request_start;
             r->request_line.data = r->request_start;
             r->request_length = r->header_in->pos - r->request_start;
@@ -985,6 +971,7 @@ ngx_http_process_request_line(ngx_event_t *rev)
             }
 
             if (ngx_http_process_request_uri(r) != NGX_OK) {
+                SESSION_END(0);
                 return;
             }
 
@@ -999,15 +986,18 @@ ngx_http_process_request_line(ngx_event_t *rev)
                     ngx_log_error(NGX_LOG_INFO, c->log, 0,
                                   "client sent invalid host in request line");
                     ngx_http_finalize_request(r, NGX_HTTP_BAD_REQUEST);
+                    SESSION_END(0);
                     return;
                 }
 
                 if (rc == NGX_ERROR) {
                     ngx_http_close_request(r, NGX_HTTP_INTERNAL_SERVER_ERROR);
+                    SESSION_END(0);
                     return;
                 }
 
                 if (ngx_http_set_virtual_server(r, &host) == NGX_ERROR) {
+                    SESSION_END(0);
                     return;
                 }
 
@@ -1020,10 +1010,14 @@ ngx_http_process_request_line(ngx_event_t *rev)
                     && ngx_http_set_virtual_server(r, &r->headers_in.server)
                        == NGX_ERROR)
                 {
+                    SESSION_END(0);
                     return;
                 }
 
+                PATH_INC();
                 ngx_http_process_request(r);
+                PATH_DEC();
+                SESSION_END(1);
                 return;
             }
 
@@ -1033,6 +1027,7 @@ ngx_http_process_request_line(ngx_event_t *rev)
                 != NGX_OK)
             {
                 ngx_http_close_request(r, NGX_HTTP_INTERNAL_SERVER_ERROR);
+                SESSION_END(0);
                 return;
             }
 
@@ -1041,6 +1036,7 @@ ngx_http_process_request_line(ngx_event_t *rev)
             rev->handler = ngx_http_process_request_headers;
             ngx_http_process_request_headers(rev);
 
+            SESSION_END(0);
             return;
         }
 
