@@ -849,7 +849,7 @@ ngx_http_core_run_phases(ngx_http_request_t *r)
             PATH_INC();
         }
         rc = ph[r->phase_handler].checker(r, &ph[r->phase_handler]);
-        if (r->phase_handler == 9) {
+        if (r->phase_handler == 10) {
             PATH_DEC();
         }
 
