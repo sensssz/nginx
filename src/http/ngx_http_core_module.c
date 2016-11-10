@@ -844,7 +844,9 @@ ngx_http_core_run_phases(ngx_http_request_t *r)
 
     while (ph[r->phase_handler].checker) {
 
+        PATH_INC();
         rc = ph[r->phase_handler].checker(r, &ph[r->phase_handler]);
+        PATH_DEC();
 
         if (rc == NGX_OK) {
             return;
