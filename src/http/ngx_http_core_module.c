@@ -1384,7 +1384,9 @@ ngx_http_core_content_phase(ngx_http_request_t *r,
     ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
                    "content phase: %ui", r->phase_handler);
 
+    PATH_INC();
     rc = ph->handler(r);
+    PATH_DEC();
 
     if (rc != NGX_DECLINED) {
         ngx_http_finalize_request(r, rc);
