@@ -1417,7 +1417,9 @@ ngx_http_core_content_phase(ngx_http_request_t *r,
 
     ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "no handler found");
 
+    PATH_INC();
     ngx_http_finalize_request(r, NGX_HTTP_NOT_FOUND);
+    PATH_DEC();
     return NGX_OK;
 }
 
