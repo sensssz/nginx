@@ -109,6 +109,7 @@ ngx_http_index_handler(ngx_http_request_t *r)
     ngx_http_index_loc_conf_t    *ilcf;
     ngx_http_script_len_code_pt   lcode;
 
+
     if (r->uri.data[r->uri.len - 1] != '/') {
         return NGX_DECLINED;
     }
@@ -274,7 +275,10 @@ ngx_http_index_handler(ngx_http_request_t *r)
             ngx_memcpy(p, name, len - 1);
         }
 
-        return ngx_http_internal_redirect(r, &uri, &r->args);
+        PATH_INC();
+        rc = ngx_http_internal_redirect(r, &uri, &r->args);
+        PATH_DEC();
+        return rc;
     }
 
     return NGX_DECLINED;
