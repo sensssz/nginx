@@ -835,6 +835,7 @@ ngx_http_handler(ngx_http_request_t *r)
 void
 ngx_http_core_run_phases(ngx_http_request_t *r)
 {
+    int                         index = 0;
     ngx_int_t                   rc;
     ngx_http_phase_handler_t   *ph;
     ngx_http_core_main_conf_t  *cmcf;
@@ -845,11 +846,11 @@ ngx_http_core_run_phases(ngx_http_request_t *r)
 
     while (ph[r->phase_handler].checker) {
 
-        if (r->phase_handler == 9) {
+        if (index == 9) {
             PATH_INC();
         }
         rc = ph[r->phase_handler].checker(r, &ph[r->phase_handler]);
-        if (r->phase_handler == 10) {
+        if (index == 9) {
             PATH_DEC();
         }
 
