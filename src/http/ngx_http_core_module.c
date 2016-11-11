@@ -854,6 +854,8 @@ ngx_http_core_run_phases(ngx_http_request_t *r)
             PATH_DEC();
         }
 
+        index++;
+
         if (rc == NGX_OK) {
             return;
         }
