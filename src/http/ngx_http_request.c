@@ -2280,7 +2280,9 @@ ngx_http_finalize_request(ngx_http_request_t *r, ngx_int_t rc)
                    rc, &r->uri, &r->args, r == c->data, r->main->count);
 
     if (rc == NGX_DONE) {
+        PATH_INC();
         ngx_http_finalize_connection(r);
+        PATH_DEC();
         return;
     }
 
