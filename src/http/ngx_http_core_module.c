@@ -2622,7 +2622,9 @@ ngx_http_internal_redirect(ngx_http_request_t *r,
     r->add_uri_to_alias = 0;
     r->main->count++;
 
+    PATH_INC();
     ngx_http_handler(r);
+    PATH_DEC();
 
     return NGX_DONE;
 }
