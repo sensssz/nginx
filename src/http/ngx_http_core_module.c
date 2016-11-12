@@ -835,21 +835,17 @@ ngx_http_handler(ngx_http_request_t *r)
 void
 ngx_http_core_run_phases(ngx_http_request_t *r)
 {
-    TRACE_FUNCTION_START();
     int                         index = 0;
     ngx_int_t                   rc;
     ngx_http_phase_handler_t   *ph;
     ngx_http_core_main_conf_t  *cmcf;
 
-    TRACE_START();
     cmcf = ngx_http_get_module_main_conf(r, ngx_http_core_module);
-    TRACE_END(1);
 
     ph = cmcf->phase_engine.handlers;
 
     while (ph[r->phase_handler].checker) {
 
-        TRACE_START();
         if (index == 9) {
             PATH_INC();
         }
@@ -857,16 +853,13 @@ ngx_http_core_run_phases(ngx_http_request_t *r)
         if (index == 9) {
             PATH_DEC();
         }
-        TRACE_END(index + 2);
 
         index++;
 
         if (rc == NGX_OK) {
-            TRACE_FUNCTION_END();
             return;
         }
     }
-    TRACE_FUNCTION_END();
 }
 
 
