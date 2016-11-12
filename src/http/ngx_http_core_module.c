@@ -846,11 +846,13 @@ ngx_http_core_run_phases(ngx_http_request_t *r)
 
     while (ph[r->phase_handler].checker) {
 
-        if (index == 9 || index == 11) {
+        if ((PATH_GET() == 2 && index == 9) ||
+            (PATH_GET() == 8 && index == 11)) {
             PATH_INC();
         }
         rc = ph[r->phase_handler].checker(r, &ph[r->phase_handler]);
-        if (index == 9 || index == 11) {
+        if ((PATH_GET() == 2 && index == 9) ||
+            (PATH_GET() == 8 && index == 11)) {
             PATH_DEC();
         }
 
