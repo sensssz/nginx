@@ -17,8 +17,8 @@ using std::string;
 using std::to_string;
 using std::set;
 
-#define TARGET_PATH_COUNT 14
-#define NUMBER_OF_FUNCTIONS 10
+#define TARGET_PATH_COUNT 16
+#define NUMBER_OF_FUNCTIONS 52
 #define LATENCY
 #define MONITOR
 

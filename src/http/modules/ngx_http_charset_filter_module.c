@@ -554,7 +554,10 @@ ngx_http_charset_body_filter(ngx_http_request_t *r, ngx_chain_t *in)
     ctx = ngx_http_get_module_ctx(r, ngx_http_charset_filter_module);
 
     if (ctx == NULL || ctx->table == NULL) {
-        return ngx_http_next_body_filter(r, in);
+        PATH_INC();
+        rc = ngx_http_next_body_filter(r, in);
+        PATH_DEC();
+        return rc;
     }
 
     if ((ctx->to_utf8 || ctx->from_utf8) || ctx->busy) {
