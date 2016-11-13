@@ -8,6 +8,7 @@
 #include <ngx_config.h>
 #include <ngx_core.h>
 #include <ngx_http.h>
+#include <ngx_trace.h>
 
 
 typedef struct {
@@ -149,7 +150,9 @@ ngx_http_copy_filter(ngx_http_request_t *r, ngx_chain_t *in)
     ctx->aio = r->aio;
 #endif
 
+    PATH_INC();
     rc = ngx_output_chain(ctx, in);
+    PATH_DEC();
 
     if (ctx->in == NULL) {
         r->buffered &= ~NGX_HTTP_COPY_BUFFERED;
