@@ -27,6 +27,8 @@ int get_thread_id();
 
 void log_command(const char *command);
 
+void log_address(void *address);
+
 void SESSION_START();
 
 void SESSION_END(int successful);

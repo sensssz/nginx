@@ -611,6 +611,7 @@ ngx_http_range_not_satisfiable(ngx_http_request_t *r)
 static ngx_int_t
 ngx_http_range_body_filter(ngx_http_request_t *r, ngx_chain_t *in)
 {
+    ngx_int_t                     rc;
     ngx_http_range_filter_ctx_t  *ctx;
 
     if (in == NULL) {
@@ -620,7 +621,10 @@ ngx_http_range_body_filter(ngx_http_request_t *r, ngx_chain_t *in)
     ctx = ngx_http_get_module_ctx(r, ngx_http_range_body_filter_module);
 
     if (ctx == NULL) {
-        return ngx_http_next_body_filter(r, in);
+        PATH_INC();
+        rc = ngx_http_next_body_filter(r, in);
+        PATH_DEC();
+        return rc;
     }
 
     if (ctx->ranges.nelts == 1) {

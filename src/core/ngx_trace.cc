@@ -138,6 +138,10 @@ void log_command(const char *command) {
     TraceTool::get_instance()->log_file << "[Thread " << pthread_self() << "]: " << command << endl;
 }
 
+void log_address(void *address) {
+    TraceTool::get_instance()->log_file << "[Thread " << pthread_self() << "]: " << address << endl;
+}
+
 void QUERY_START() {
     TraceTool::get_instance()->global_last_query = TraceTool::get_time();
 }
