@@ -3564,7 +3564,9 @@ ngx_http_close_connection(ngx_connection_t *c)
 
     pool = c->pool;
 
+    PATH_INC();
     ngx_close_connection(c);
+    PATH_DEC();
 
     ngx_destroy_pool(pool);
 }
