@@ -8,6 +8,7 @@
 #include <ngx_config.h>
 #include <ngx_core.h>
 #include <ngx_event.h>
+#include <ngx_trace.h>
 
 
 #if 0
@@ -71,7 +72,10 @@ ngx_output_chain(ngx_output_chain_ctx_t *ctx, ngx_chain_t *in)
 #endif
             && ngx_output_chain_as_is(ctx, in->buf))
         {
-            return ctx->output_filter(ctx->filter_ctx, in);
+            PATH_INC();
+            rc = ctx->output_filter(ctx->filter_ctx, in);
+            PATH_DEC();
+            return rc;
         }
     }
 
