@@ -8,6 +8,7 @@
 #include <ngx_config.h>
 #include <ngx_core.h>
 #include <ngx_http.h>
+#include <ngx_trace.h>
 
 #include <zlib.h>
 
@@ -323,7 +324,10 @@ ngx_http_gzip_body_filter(ngx_http_request_t *r, ngx_chain_t *in)
     ctx = ngx_http_get_module_ctx(r, ngx_http_gzip_filter_module);
 
     if (ctx == NULL || ctx->done || r->header_only) {
-        return ngx_http_next_body_filter(r, in);
+        PATH_INC();
+        rc = ngx_http_next_body_filter(r, in);
+        PATH_DEC();
+        return rc;
     }
 
     ngx_log_debug0(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
