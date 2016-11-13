@@ -8,6 +8,7 @@
 #include <ngx_config.h>
 #include <ngx_core.h>
 #include <ngx_http.h>
+#include <ngx_trace.h>
 
 
 static ngx_int_t ngx_http_postpone_filter_add(ngx_http_request_t *r,
@@ -52,6 +53,7 @@ static ngx_http_output_body_filter_pt    ngx_http_next_body_filter;
 static ngx_int_t
 ngx_http_postpone_filter(ngx_http_request_t *r, ngx_chain_t *in)
 {
+    ngx_int_t                      rc;
     ngx_connection_t              *c;
     ngx_http_postponed_request_t  *pr;
 
@@ -79,7 +81,10 @@ ngx_http_postpone_filter(ngx_http_request_t *r, ngx_chain_t *in)
     if (r->postponed == NULL) {
 
         if (in || c->buffered) {
-            return ngx_http_next_body_filter(r->main, in);
+            PATH_INC();
+            rc = ngx_http_next_body_filter(r->main, in);
+            PATH_DEC();
+            return rc;
         }
 
         return NGX_OK;
