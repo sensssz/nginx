@@ -3422,8 +3422,12 @@ ngx_http_close_request(ngx_http_request_t *r, ngx_int_t rc)
     }
 #endif
 
+    PATH_INC();
     ngx_http_free_request(r, rc);
+    PATH_DEC();
+    PATH_INC();
     ngx_http_close_connection(c);
+    PATH_DEC();
 }
 
 
