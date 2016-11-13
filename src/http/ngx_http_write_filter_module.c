@@ -8,6 +8,7 @@
 #include <ngx_config.h>
 #include <ngx_core.h>
 #include <ngx_http.h>
+#include <ngx_trace.h>
 
 
 static ngx_int_t ngx_http_write_filter_init(ngx_conf_t *cf);
@@ -251,7 +252,9 @@ ngx_http_write_filter(ngx_http_request_t *r, ngx_chain_t *in)
     ngx_log_debug1(NGX_LOG_DEBUG_HTTP, c->log, 0,
                    "http write filter limit %O", limit);
 
+    PATH_INC();
     chain = c->send_chain(c, r->out, limit);
+    PATH_DEC();
 
     ngx_log_debug1(NGX_LOG_DEBUG_HTTP, c->log, 0,
                    "http write filter %p", chain);
