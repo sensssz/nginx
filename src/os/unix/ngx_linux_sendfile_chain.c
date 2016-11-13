@@ -8,6 +8,7 @@
 #include <ngx_config.h>
 #include <ngx_core.h>
 #include <ngx_event.h>
+#include <ngx_trace.h>
 
 
 static ssize_t ngx_linux_sendfile(ngx_connection_t *c, ngx_buf_t *file,
@@ -212,7 +213,9 @@ ngx_linux_sendfile_chain(ngx_connection_t *c, ngx_chain_t *in, off_t limit)
             }
 
         } else {
+            PATH_INC();
             n = ngx_writev(c, &header);
+            PATH_DEC();
 
             if (n == NGX_ERROR) {
                 return NGX_CHAIN_ERROR;
