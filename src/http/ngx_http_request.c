@@ -2570,7 +2570,9 @@ ngx_http_finalize_connection(ngx_http_request_t *r)
         return;
     }
 
+    PATH_INC();
     ngx_http_close_request(r, 0);
+    PATH_DEC();
 }
 
 

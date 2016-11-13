@@ -267,7 +267,11 @@ ngx_http_static_handler(ngx_http_request_t *r)
     out.buf = b;
     out.next = NULL;
 
-    return ngx_http_output_filter(r, &out);
+    PATH_INC();
+    rc = ngx_http_output_filter(r, &out);
+    PATH_DEC();
+
+    return rc;
 }
 
 
