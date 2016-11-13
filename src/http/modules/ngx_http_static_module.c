@@ -8,6 +8,7 @@
 #include <ngx_config.h>
 #include <ngx_core.h>
 #include <ngx_http.h>
+#include <ngx_trace.h>
 
 
 static ngx_int_t ngx_http_static_handler(ngx_http_request_t *r);
