@@ -8,6 +8,7 @@
 #include <ngx_config.h>
 #include <ngx_core.h>
 #include <ngx_http.h>
+#include <ngx_trace.h>
 
 #define NGX_HTTP_SSI_ERROR          1
 
@@ -408,7 +409,10 @@ ngx_http_ssi_body_filter(ngx_http_request_t *r, ngx_chain_t *in)
             && ctx->in == NULL
             && ctx->busy == NULL))
     {
-        return ngx_http_next_body_filter(r, in);
+        PATH_INC();
+        rc = ngx_http_next_body_filter(r, in);
+        PATH_DEC();
+        return rc;
     }
 
     /* add the incoming chain to the chain ctx->in */
