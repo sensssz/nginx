@@ -382,7 +382,9 @@ ngx_http_log_handler(ngx_http_request_t *r)
 
         ngx_linefeed(p);
 
+        PATH_INC();
         ngx_http_log_write(r, &log[l], line, p - line);
+        PATH_DEC();
     }
 
     return NGX_OK;
