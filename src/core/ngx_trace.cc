@@ -126,7 +126,7 @@ thread_local timespec TraceTool::trans_start;
 bool TraceTool::should_shutdown = false;
 pthread_t TraceTool::back_thread;
 
-static long write_duration = 0;
+static thread_local long write_duration = 0;
 
 /* Define MONITOR if needs to trace running time of functions. */
 #ifdef MONITOR
