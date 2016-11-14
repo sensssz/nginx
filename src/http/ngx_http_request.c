@@ -1922,7 +1922,7 @@ ngx_http_process_request(ngx_http_request_t *r)
 
     ngx_http_run_posted_requests(c);
     SESSION_END(1);
-    EXCLUDE_WRITE(3);
+    EXCLUDE_WRITE(23);
     EXCLUDE_WRITE(-1);
 }
 
