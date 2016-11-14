@@ -213,9 +213,7 @@ ngx_linux_sendfile_chain(ngx_connection_t *c, ngx_chain_t *in, off_t limit)
             }
 
         } else {
-            PATH_INC();
             n = ngx_writev(c, &header);
-            PATH_DEC();
 
             if (n == NGX_ERROR) {
                 return NGX_CHAIN_ERROR;

@@ -33,6 +33,10 @@ void SESSION_START();
 
 void SESSION_END(int successful);
 
+void SET_WRITE(long write_time);
+
+void EXCLUDE_WRITE(int index);
+
 void PATH_SET(int path_count);
 
 int PATH_GET();

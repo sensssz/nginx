@@ -17,8 +17,8 @@ using std::string;
 using std::to_string;
 using std::set;
 
-#define TARGET_PATH_COUNT 8
-#define NUMBER_OF_FUNCTIONS 12
+#define TARGET_PATH_COUNT 0
+#define NUMBER_OF_FUNCTIONS 18
 #define LATENCY
 #define MONITOR
 
@@ -126,6 +126,8 @@ thread_local timespec TraceTool::trans_start;
 bool TraceTool::should_shutdown = false;
 pthread_t TraceTool::back_thread;
 
+static long write_duration = 0;
+
 /* Define MONITOR if needs to trace running time of functions. */
 #ifdef MONITOR
 static thread_local timespec function_start;
@@ -157,6 +159,16 @@ void SESSION_END(int successful) {
     TraceTool::get_instance()->is_commit = true;
     TraceTool::get_instance()->commit_successful = successful;
     TraceTool::get_instance()->end_trx();
+#endif
+}
+
+void SET_WRITE(long write_time) {
+    write_duration = write_time;
+}
+
+void EXCLUDE_WRITE(int index) {
+#ifdef LATENCY
+    TraceTool::get_instance()->add_record(index, -write_duration);
 #endif
 }
 
@@ -369,7 +381,11 @@ void TraceTool::add_record(int function_index, long duration) {
         current_transaction_id = 0;
     }
     pthread_rwlock_rdlock(&data_lock);
-    function_times[function_index][current_transaction_id] += duration;
+    if (function_index == -1) {
+        function_times.back()[current_transaction_id] += duration;
+    } else {
+        function_times[function_index][current_transaction_id] += duration;
+    }
     pthread_rwlock_unlock(&data_lock);
 }
 
