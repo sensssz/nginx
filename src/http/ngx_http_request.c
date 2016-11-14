@@ -1840,7 +1840,6 @@ void
 ngx_http_process_request(ngx_http_request_t *r)
 {
     SESSION_START();
-    TRACE_FUNCTION_START();
     ngx_connection_t  *c;
 
     c = r->connection;
@@ -1856,7 +1855,6 @@ ngx_http_process_request(ngx_http_request_t *r)
             ngx_log_error(NGX_LOG_INFO, c->log, 0,
                           "client sent plain HTTP request to HTTPS port");
             ngx_http_finalize_request(r, NGX_HTTP_TO_HTTPS);
-            TRACE_FUNCTION_END();
             SESSION_END(0);
             return;
         }
@@ -1876,8 +1874,7 @@ ngx_http_process_request(ngx_http_request_t *r)
                 ngx_ssl_remove_cached_session(sscf->ssl.ctx,
                                        (SSL_get0_session(c->ssl->connection)));
 
-                ngx_http_finalize_request(r, NGX_HTTPS_CERT_ERROR);
-                TRACE_FUNCTION_END();
+                ngx_http_finalize_request(r, NGX_HTTPS_CERT_ERROR);\
                 SESSION_END(0);
                 return;
             }
@@ -1893,7 +1890,6 @@ ngx_http_process_request(ngx_http_request_t *r)
                                        (SSL_get0_session(c->ssl->connection)));
 
                     ngx_http_finalize_request(r, NGX_HTTPS_NO_CERT);
-                    TRACE_FUNCTION_END();
                     SESSION_END(0);
                     return;
                 }
@@ -1920,12 +1916,11 @@ ngx_http_process_request(ngx_http_request_t *r)
     c->write->handler = ngx_http_request_handler;
     r->read_event_handler = ngx_http_block_reading;
 
-    TRACE_START();
+    PATH_INC();
     ngx_http_handler(r);
-    TRACE_END(1);
+    PATH_DEC();
 
     ngx_http_run_posted_requests(c);
-    TRACE_FUNCTION_END();
     SESSION_END(1);
     EXCLUDE_WRITE(1);
     EXCLUDE_WRITE(-1);
