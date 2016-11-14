@@ -109,10 +109,7 @@ ngx_http_chunked_body_filter(ngx_http_request_t *r, ngx_chain_t *in)
     ngx_http_chunked_filter_ctx_t  *ctx;
 
     if (in == NULL || !r->chunked || r->header_only) {
-        timespec start = get_time();
         rc = ngx_http_next_body_filter(r, in);
-        timespec end = get_time();
-        SET_WRITE(diff_time(start, end));
         return rc;
     }
 

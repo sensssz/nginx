@@ -48,6 +48,7 @@ ngx_module_t  ngx_http_write_filter_module = {
 ngx_int_t
 ngx_http_write_filter(ngx_http_request_t *r, ngx_chain_t *in)
 {
+    timespec start = get_time();
     off_t                      size, sent, nsent, limit;
     ngx_uint_t                 last, flush, sync;
     ngx_msec_t                 delay;
@@ -58,6 +59,8 @@ ngx_http_write_filter(ngx_http_request_t *r, ngx_chain_t *in)
     c = r->connection;
 
     if (c->error) {
+        timespec end = get_time();
+        SET_WRITE(diff_time(start, end));
         return NGX_ERROR;
     }
 
@@ -97,6 +100,8 @@ ngx_http_write_filter(ngx_http_request_t *r, ngx_chain_t *in)
                           cl->buf->file_last);
 
             ngx_debug_point();
+            timespec end = get_time();
+            SET_WRITE(diff_time(start, end));
             return NGX_ERROR;
         }
 #endif
@@ -121,6 +126,8 @@ ngx_http_write_filter(ngx_http_request_t *r, ngx_chain_t *in)
     for (ln = in; ln; ln = ln->next) {
         cl = ngx_alloc_chain_link(r->pool);
         if (cl == NULL) {
+            timespec end = get_time();
+            SET_WRITE(diff_time(start, end));
             return NGX_ERROR;
         }
 
@@ -153,6 +160,8 @@ ngx_http_write_filter(ngx_http_request_t *r, ngx_chain_t *in)
                           cl->buf->file_last);
 
             ngx_debug_point();
+            timespec end = get_time();
+            SET_WRITE(diff_time(start, end));
             return NGX_ERROR;
         }
 #endif
@@ -186,11 +195,15 @@ ngx_http_write_filter(ngx_http_request_t *r, ngx_chain_t *in)
      */
 
     if (!last && !flush && in && size < (off_t) clcf->postpone_output) {
+        timespec end = get_time();
+        SET_WRITE(diff_time(start, end));
         return NGX_OK;
     }
 
     if (c->write->delayed) {
         c->buffered |= NGX_HTTP_WRITE_BUFFERED;
+        timespec end = get_time();
+        SET_WRITE(diff_time(start, end));
         return NGX_AGAIN;
     }
 
@@ -216,6 +229,8 @@ ngx_http_write_filter(ngx_http_request_t *r, ngx_chain_t *in)
 
         ngx_debug_point();
 
+        timespec end = get_time();
+        SET_WRITE(diff_time(start, end));
         return NGX_ERROR;
     }
 
@@ -234,6 +249,8 @@ ngx_http_write_filter(ngx_http_request_t *r, ngx_chain_t *in)
 
             c->buffered |= NGX_HTTP_WRITE_BUFFERED;
 
+            timespec end = get_time();
+            SET_WRITE(diff_time(start, end));
             return NGX_AGAIN;
         }
 
@@ -259,6 +276,8 @@ ngx_http_write_filter(ngx_http_request_t *r, ngx_chain_t *in)
 
     if (chain == NGX_CHAIN_ERROR) {
         c->error = 1;
+        timespec end = get_time();
+        SET_WRITE(diff_time(start, end));
         return NGX_ERROR;
     }
 
@@ -306,15 +325,21 @@ ngx_http_write_filter(ngx_http_request_t *r, ngx_chain_t *in)
 
     if (chain) {
         c->buffered |= NGX_HTTP_WRITE_BUFFERED;
+        timespec end = get_time();
+        SET_WRITE(diff_time(start, end));
         return NGX_AGAIN;
     }
 
     c->buffered &= ~NGX_HTTP_WRITE_BUFFERED;
 
     if ((c->buffered & NGX_LOWLEVEL_BUFFERED) && r->postponed == NULL) {
+        timespec end = get_time();
+        SET_WRITE(diff_time(start, end));
         return NGX_AGAIN;
     }
 
+    timespec end = get_time();
+    SET_WRITE(diff_time(start, end));
     return NGX_OK;
 }
 
