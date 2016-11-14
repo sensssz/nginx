@@ -3481,7 +3481,9 @@ ngx_http_free_request(ngx_http_request_t *r, ngx_int_t rc)
 
     log->action = "logging request";
 
+    PATH_INC();
     ngx_http_log_request(r);
+    PATH_DEC();
 
     log->action = "closing request";
 
