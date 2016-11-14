@@ -158,6 +158,7 @@ void QUERY_START() {
 
 void SESSION_START() {
 #ifdef LATENCY
+    write_duration = 0;
     TraceTool::get_instance()->start_trx();
 #endif
 }
