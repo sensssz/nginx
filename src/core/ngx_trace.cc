@@ -178,6 +178,9 @@ void SET_WRITE(long write_time) {
 void EXCLUDE_WRITE(int index) {
 #ifdef LATENCY
     TraceTool::get_instance()->add_record(index, -write_duration);
+    if (index != -1) {
+        TraceTool::get_instance()->add_record(0, -write_duration);
+    }
 #endif
 }
 
