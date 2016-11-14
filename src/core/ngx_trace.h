@@ -31,7 +31,7 @@ void log_address(void *address);
 
 timespec get_time();
 
-long difftime(timespec start, timespec end);
+long diff_time(timespec start, timespec end);
 
 void SESSION_START();
 

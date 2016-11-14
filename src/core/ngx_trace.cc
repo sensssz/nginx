@@ -148,7 +148,7 @@ timespec get_time() {
     return TraceTool::get_time();
 }
 
-long difftime(timespec start, timespec end) {
+long diff_time(timespec start, timespec end) {
     return TraceTool::difftime(start, end);
 }
 
