@@ -112,7 +112,7 @@ ngx_http_chunked_body_filter(ngx_http_request_t *r, ngx_chain_t *in)
         timespec start = get_time();
         rc = ngx_http_next_body_filter(r, in);
         timespec endd = get_time();
-        SET_WRITE(difftime(start, end));
+        SET_WRITE(diff_time(start, end));
         return rc;
     }
 
