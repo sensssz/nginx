@@ -1840,6 +1840,7 @@ void
 ngx_http_process_request(ngx_http_request_t *r)
 {
     SESSION_START();
+    TRACE_FUNCTION_START();
     ngx_connection_t  *c;
 
     c = r->connection;
@@ -1916,9 +1917,12 @@ ngx_http_process_request(ngx_http_request_t *r)
     c->write->handler = ngx_http_request_handler;
     r->read_event_handler = ngx_http_block_reading;
 
+    TRACE_START();
     ngx_http_handler(r);
+    TRACE_END(1);
 
     ngx_http_run_posted_requests(c);
+    TRACE_FUNCTION_END();
     SESSION_END(1);
     EXCLUDE_WRITE();
 }
