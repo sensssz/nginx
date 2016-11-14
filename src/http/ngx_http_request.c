@@ -1856,6 +1856,7 @@ ngx_http_process_request(ngx_http_request_t *r)
             ngx_log_error(NGX_LOG_INFO, c->log, 0,
                           "client sent plain HTTP request to HTTPS port");
             ngx_http_finalize_request(r, NGX_HTTP_TO_HTTPS);
+            TRACE_FUNCTION_END();
             SESSION_END(0);
             return;
         }
@@ -1876,6 +1877,7 @@ ngx_http_process_request(ngx_http_request_t *r)
                                        (SSL_get0_session(c->ssl->connection)));
 
                 ngx_http_finalize_request(r, NGX_HTTPS_CERT_ERROR);
+                TRACE_FUNCTION_END();
                 SESSION_END(0);
                 return;
             }
@@ -1891,6 +1893,7 @@ ngx_http_process_request(ngx_http_request_t *r)
                                        (SSL_get0_session(c->ssl->connection)));
 
                     ngx_http_finalize_request(r, NGX_HTTPS_NO_CERT);
+                    TRACE_FUNCTION_END();
                     SESSION_END(0);
                     return;
                 }
