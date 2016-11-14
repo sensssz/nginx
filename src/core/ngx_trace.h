@@ -29,6 +29,10 @@ void log_command(const char *command);
 
 void log_address(void *address);
 
+timespec get_time();
+
+long difftime(timespec start, timespec end);
+
 void SESSION_START();
 
 void SESSION_END(int successful);

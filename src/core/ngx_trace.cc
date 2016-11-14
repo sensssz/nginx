@@ -144,6 +144,14 @@ void log_address(void *address) {
     TraceTool::get_instance()->log_file << "[Thread " << pthread_self() << "]: " << address << endl;
 }
 
+timespec get_time() {
+    return TraceTool::get_time();
+}
+
+long difftime(timespec start, timespec end) {
+    return TraceTool::difftime(start, end);
+}
+
 void QUERY_START() {
     TraceTool::get_instance()->global_last_query = TraceTool::get_time();
 }
