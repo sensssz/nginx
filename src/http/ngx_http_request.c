@@ -1928,6 +1928,7 @@ ngx_http_process_request(ngx_http_request_t *r)
     TRACE_FUNCTION_END();
     SESSION_END(1);
     EXCLUDE_WRITE(1);
+    EXCLUDE_WRITE(-1);
 }
 
 
