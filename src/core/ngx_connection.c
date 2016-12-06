@@ -1167,6 +1167,15 @@ ngx_close_connection(ngx_connection_t *c)
         return;
     }
 
+    /* EECS582 VProfiler **************************/
+    while (__sync_val_compare_and_swap(ngx_cycle->fd_close_queue + ngx_cycle->fd_close_idx, 
+                                       -1, fd) != -1)) {
+        if (ngx_cycle->fd_close_idx + 1 < 512)
+            ngx_cycle->fd_close_idx++;
+        else 
+            ngx_cycle->fd_close_idx = 0;
+    }
+    /************************** EECS582 VProfiler *
     if (ngx_close_socket(fd) == -1) {
 
         err = ngx_socket_errno;
@@ -1193,6 +1202,7 @@ ngx_close_connection(ngx_connection_t *c)
 
         ngx_log_error(level, c->log, err, ngx_close_socket_n " %d failed", fd);
     }
+    ************************** EECS582 VProfiler */
 }
 
 

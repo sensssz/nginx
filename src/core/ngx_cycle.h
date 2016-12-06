@@ -47,6 +47,9 @@ struct ngx_cycle_s {
     ngx_connection_t        **files;
     ngx_connection_t         *free_connections;
     ngx_uint_t                free_connection_n;
+    
+    ngx_socket_t              fd_close_queue[512]; /* EECS582 VProfiler */
+    ngx_uint_t                fd_close_idx; /* EECS582 VProfiler */
 
     ngx_module_t            **modules;
     ngx_uint_t                modules_n;
