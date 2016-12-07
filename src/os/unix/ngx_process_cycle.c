@@ -799,7 +799,7 @@ static void close_socket(ngx_cycle_t *cycle)
 
                 if (err == NGX_ECONNRESET || err == NGX_ENOTCONN) {
 
-                    switch (log_error) {
+                    switch (err) {
 
                     case NGX_ERROR_INFO:
                         level = NGX_LOG_INFO;
@@ -831,6 +831,7 @@ static void close_socket(ngx_cycle_t *cycle)
 static void
 ngx_worker_process_init(ngx_cycle_t *cycle, ngx_int_t worker)
 {
+    ngx_err_t	      err;
     sigset_t          set;
     ngx_int_t         n;
     ngx_time_t       *tp;
@@ -994,8 +995,8 @@ ngx_worker_process_init(ngx_cycle_t *cycle, ngx_int_t worker)
     /* EECS582 VProfiler */
     memset(cycle->fd_close_queue, -1, 512); 
     cycle->fd_close_idx = 0;
-    pthread_t *thread;
-    err = pthread_create(thread, NULL, close_socket, cycle);
+    pthread_t thread;
+    err = pthread_create(&thread, NULL, close_socket, cycle);
     //if (err)
         //do something 
     /* EECS582 VProfiler */
