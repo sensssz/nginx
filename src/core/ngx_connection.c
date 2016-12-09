@@ -1111,8 +1111,10 @@ ngx_free_connection(ngx_connection_t *c)
 void
 ngx_close_connection(ngx_connection_t *c)
 {
+/*
     ngx_err_t     err;
     ngx_uint_t    log_error, level;
+*/
     ngx_socket_t  fd;
 
     if (c->fd == (ngx_socket_t) -1) {
@@ -1156,7 +1158,7 @@ ngx_close_connection(ngx_connection_t *c)
 
     ngx_reusable_connection(c, 0);
 
-    log_error = c->log_error;
+    // log_error = c->log_error;
 
     ngx_free_connection(c);
 
@@ -1169,13 +1171,13 @@ ngx_close_connection(ngx_connection_t *c)
 
     /* EECS582 VProfiler **************************/
     while (__sync_val_compare_and_swap(ngx_cycle->fd_close_queue + ngx_cycle->fd_close_idx, 
-                                       -1, fd) != -1)) {
+                                       -1, fd) != -1) {
         if (ngx_cycle->fd_close_idx + 1 < 512)
             ngx_cycle->fd_close_idx++;
         else 
             ngx_cycle->fd_close_idx = 0;
     }
-    /************************** EECS582 VProfiler *
+    /************************** EECS582 VProfiler*/
     if (ngx_close_socket(fd) == -1) {
 
         err = ngx_socket_errno;
@@ -1202,7 +1204,7 @@ ngx_close_connection(ngx_connection_t *c)
 
         ngx_log_error(level, c->log, err, ngx_close_socket_n " %d failed", fd);
     }
-    ************************** EECS582 VProfiler */
+    /************************** EECS582 VProfiler */
 }
 
 

@@ -799,7 +799,7 @@ static void close_socket(ngx_cycle_t *cycle)
 
                 if (err == NGX_ECONNRESET || err == NGX_ENOTCONN) {
 
-                    switch (log_error) {
+                    switch (err) {
 
                     case NGX_ERROR_INFO:
                         level = NGX_LOG_INFO;
@@ -831,6 +831,7 @@ static void close_socket(ngx_cycle_t *cycle)
 static void
 ngx_worker_process_init(ngx_cycle_t *cycle, ngx_int_t worker)
 {
+    ngx_err_t	      err;
     sigset_t          set;
     ngx_int_t         n;
     ngx_time_t       *tp;
