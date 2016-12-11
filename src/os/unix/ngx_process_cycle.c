@@ -997,8 +997,6 @@ ngx_worker_process_init(ngx_cycle_t *cycle, ngx_int_t worker)
     cycle->fd_close_idx = 0;
     pthread_t thread;
     pthread_create(&thread, NULL, &close_socket, (void *)cycle);
-    //if (err)
-        //do something 
     /* EECS582 VProfiler */
 }
 

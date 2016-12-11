@@ -1175,7 +1175,7 @@ ngx_close_connection(ngx_connection_t *c)
         else 
             ngx_cycle->fd_close_idx = 0;
     }
-    /************************** EECS582 VProfiler
+    /************************** EECS582 VProfiler*/
     if (ngx_close_socket(fd) == -1) {
 
         err = ngx_socket_errno;
@@ -1202,7 +1202,7 @@ ngx_close_connection(ngx_connection_t *c)
 
         ngx_log_error(level, c->log, err, ngx_close_socket_n " %d failed", fd);
     }
-    ************************** EECS582 VProfiler */
+    /************************** EECS582 VProfiler */
 }
 
 
