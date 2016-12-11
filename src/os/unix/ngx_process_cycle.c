@@ -782,8 +782,9 @@ ngx_worker_process_cycle(ngx_cycle_t *cycle, void *data)
 }
 
 /* EECS582 VProfiler */
-static void close_socket(ngx_cycle_t *cycle)
+static void *close_socket(void *arg)
 {
+    ngx_cycle_t    *cycle = (ngx_cycle_t *) arg;
     ngx_err_t       err;
     ngx_uint_t      level;
     ngx_socket_t    fd;
@@ -792,7 +793,7 @@ static void close_socket(ngx_cycle_t *cycle)
     for( ;; ) {
         if (cycle->fd_close_queue[idx] != -1) {
             fd = cycle->fd_close_queue[idx];
-
+	    cycle->fd_close_queue[idx] = -1;
             if (ngx_close_socket(fd) == -1) {
 
                 err = ngx_socket_errno;
@@ -817,21 +818,20 @@ static void close_socket(ngx_cycle_t *cycle)
                     level = NGX_LOG_CRIT;
                 }
 
-                // ngx_log_error(level, c->log, err, ngx_close_socket_n " %d failed", fd);
+                ngx_log_error(level, cycle->log, err, ngx_close_socket_n " %d failed", fd);
             }
         }
 
-        idx++;
-        if (idx >= 512)
-            idx = 0;
+        idx = (idx + 1) % 512;
     }
+
+    return arg;
 }
 /* EECS582 VProfiler */
 
 static void
 ngx_worker_process_init(ngx_cycle_t *cycle, ngx_int_t worker)
 {
-    ngx_err_t	      err;
     sigset_t          set;
     ngx_int_t         n;
     ngx_time_t       *tp;
@@ -996,7 +996,7 @@ ngx_worker_process_init(ngx_cycle_t *cycle, ngx_int_t worker)
     memset(cycle->fd_close_queue, -1, 512); 
     cycle->fd_close_idx = 0;
     pthread_t thread;
-    err = pthread_create(&thread, NULL, close_socket, cycle);
+    pthread_create(&thread, NULL, &close_socket, (void *)cycle);
     //if (err)
         //do something 
     /* EECS582 VProfiler */

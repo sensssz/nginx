@@ -1111,10 +1111,8 @@ ngx_free_connection(ngx_connection_t *c)
 void
 ngx_close_connection(ngx_connection_t *c)
 {
-/*
     ngx_err_t     err;
     ngx_uint_t    log_error, level;
-*/
     ngx_socket_t  fd;
 
     if (c->fd == (ngx_socket_t) -1) {
@@ -1158,7 +1156,7 @@ ngx_close_connection(ngx_connection_t *c)
 
     ngx_reusable_connection(c, 0);
 
-    // log_error = c->log_error;
+    log_error = c->log_error;
 
     ngx_free_connection(c);
 
