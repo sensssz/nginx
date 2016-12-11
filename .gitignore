@@ -4,3 +4,4 @@ objs/
 **/*.so
 **/.DS_Store
 **/*.a
+vprofiler/
