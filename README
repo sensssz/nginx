@@ -1,0 +1,16 @@
+INSTALLTION OF NGINX
+
+The installation of Nginx requires only three steps:
+1. cd $ngx_folder;
+2. auto/configure --prefix=$prefix;
+3. make install
+
+After this, Nginx will be installed in $prefix/sbin/. By default Nginx uses port 80, therefore it requires sudo permission.
+The port can be changed in the configuration in order to run Nginx without sudo access. The configuaration file is located at $prefix/conf/nginx.conf.
+
+To start Nginx, simply run
+$prefix/sbin/nginx
+
+To stop it, run
+$prefix/sbin/nginx -s stop
+
