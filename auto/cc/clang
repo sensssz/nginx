@@ -92,7 +92,8 @@ CFLAGS="$CFLAGS -Werror"
 
 # debug
 CFLAGS="$CFLAGS -g"
+CXX_FLAGS="$CFLAGS -std=c++11"
 
 if [ ".$CPP" = "." ]; then
-    CPP="$CC -E"
+    CPP="clang++"
 fi
